@@ -27,7 +27,7 @@ const DATA_CACHE_NAME = 'DATA'+ APP_PREFIX + VERSION
   // Install the service worker
 self.addEventListener('install', function(evt) {
     evt.waitUntil(
-      caches.open(CACHE_NAME).then(cache => {
+      cache.open(CACHE_NAME).then(cache => {
         console.log('New files were cached successfully!');
         return cache.addAll(FILES_TO_CACHE);
       })
@@ -39,7 +39,7 @@ self.addEventListener('install', function(evt) {
   // Activate the service worker and remove old data from the cache
 self.addEventListener('activate', function(evt) {
     evt.waitUntil(
-      caches.keys().then(keyList => {
+      cache.keys().then(keyList => {
         return Promise.all(
           keyList.map(key => {
             if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
@@ -58,7 +58,7 @@ self.addEventListener('activate', function(evt) {
 self.addEventListener('fetch', function(evt) {
     if (evt.request.url.includes('/api/')) {
       evt.respondWith(
-        caches
+        cache
           .open(DATA_CACHE_NAME)
           .then(cache => {
             return fetch(evt.request)
@@ -83,12 +83,12 @@ self.addEventListener('fetch', function(evt) {
   
     evt.respondWith(
       fetch(evt.request).catch(function() {
-        return caches.match(evt.request).then(function(response) {
+        return cache.match(evt.request).then(function(response) {
           if (response) {
             return response;
           } else if (evt.request.headers.get('accept').includes('text/html')) {
             // return the cached home page for all requests for html pages
-            return caches.match('/');
+            return cache.match('/');
           }
         });
       })
