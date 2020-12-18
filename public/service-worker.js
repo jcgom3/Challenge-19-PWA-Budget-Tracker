@@ -1,9 +1,12 @@
 const APP_PREFIX = 'BudgetTrackerPWA-';     
 const VERSION = 'version_01';
 const CACHE_NAME = APP_PREFIX + VERSION;
+const DATA_CACHE_NAME = 'DATA'+ APP_PREFIX + VERSION
+
 
 //when user has accessed app and then tries to access again offline...cached files will be stored in users' device and user will still have access
 const FILES_TO_CACHE = [
+    "/",
     "./index.html",
     "./manifest.json",
     "./js/index.js",
@@ -17,7 +20,7 @@ const FILES_TO_CACHE = [
     "/icons/icon-152x152.png",
     "/icons/icon-192x192.png",
     "/icons/icon-72x72.png",
-     "/icons/icon-96x96.png"
+    "/icons/icon-96x96.png"
   ];
 
   // Install the service worker
@@ -38,7 +41,7 @@ self.addEventListener('activate', function(evt) {
       caches.keys().then(keyList => {
         return Promise.all(
           keyList.map(key => {
-            if (key !== APP_PREFIX && key !== CACHE_NAME) {
+            if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
               console.log('Old cache removed successfully', key);
               return caches.delete(key);
             }
@@ -55,7 +58,7 @@ self.addEventListener('fetch', function(evt) {
     if (evt.request.url.includes('/api/')) {
       evt.respondWith(
         caches
-          .open(CACHE_NAME)
+          .open(DATA_CACHE_NAME)
           .then(cache => {
             return fetch(evt.request)
               .then(response => {
