@@ -27,9 +27,9 @@ const DATA_CACHE_NAME = 'DATA'+ APP_PREFIX + VERSION
   // Install the service worker
 self.addEventListener('install', function(evt) {
     evt.waitUntil(
-      cache.open(CACHE_NAME).then(cache => {
+      caches.open(CACHE_NAME).then(caches => {
         console.log('New files were cached successfully!');
-        return cache.addAll(FILES_TO_CACHE);
+        return caches.addAll(FILES_TO_CACHE);
       })
     );
   
@@ -58,7 +58,7 @@ self.addEventListener('activate', function(evt) {
 self.addEventListener('fetch', function(evt) {
     if (evt.request.url.includes('/api/')) {
       evt.respondWith(
-        cache
+        caches
           .open(DATA_CACHE_NAME)
           .then(cache => {
             return fetch(evt.request)
