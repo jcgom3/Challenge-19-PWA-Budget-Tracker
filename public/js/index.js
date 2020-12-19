@@ -9,7 +9,7 @@ fetch("/api/transaction")
     // save db data on global variable
     console.log(data);
     transactions = data;
-    populateTotal();
+    // populateTotal();
     populateTable();
     populateChart();
   });
