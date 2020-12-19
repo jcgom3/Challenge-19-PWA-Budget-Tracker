@@ -25,6 +25,7 @@ const CACHE_NAME = APP_PREFIX + VERSION;
 
 
 self.addEventListener('install', function (e) {
+  console.log('See if it works');
   e.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       console.log('New files were cached successfully! : ' + CACHE_NAME)
