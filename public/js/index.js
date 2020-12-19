@@ -102,7 +102,7 @@ function sendTransaction(isAdding) {
   
   
   // also send to server
-  fetch("/api/transaction", {
+  fetch("/api/transaction/bulk", {
     method: "POST",
     body: JSON.stringify(transaction),
     headers: {
